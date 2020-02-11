@@ -1,2 +1,8 @@
 runtime: custom
 env: flex
+service: testservice
+instance_class: F1
+automatic_scaling:
+    max_instances: 10
+    min_instances: 1
+    target_cpu_utilization: 0.6
