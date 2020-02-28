@@ -11,7 +11,9 @@ func routes(_ app: Application) throws {
     }
 
     let todoController = TodoController()
+    let newController = NewController()
     app.get("todos", use: todoController.index)
     app.post("todos", use: todoController.create)
+    app.get("example", use: newController.index)
     app.on(.DELETE, "todos", ":todoID", use: todoController.delete)
 }

@@ -3,6 +3,7 @@ import Vapor
 
 struct TodoController {
     func index(req: Request) throws -> EventLoopFuture<[Todo]> {
+        let page = req.query.get(Int.self, at: "page")
         return Todo.query(on: req.db).all()
     }
 

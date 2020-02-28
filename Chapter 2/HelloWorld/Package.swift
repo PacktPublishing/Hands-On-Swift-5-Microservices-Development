@@ -1,12 +1,20 @@
-// swift-tools-version:4.0
+// swift-tools-version:5.1
 import PackageDescription
 
 let package = Package(
-    name: "HelloWorld",
+    name: "app",
+    platforms: [
+       .macOS(.v10_14)
+    ],
+    products: [
+        .executable(name: "App", targets: ["App"]),
+    ],
     dependencies: [
-        .package(url: "https://github.com/vapor/vapor.git", from: "3.0.0"),
+        // 💧 A server-side Swift web framework.
+        .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0-beta.2")
     ],
     targets: [
-        .target(name: "Run", dependencies: ["Vapor"], path: "./")
+        .target(name: "App", dependencies: ["Vapor"], path: ".")
     ]
 )
+
