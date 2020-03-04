@@ -1,34 +1,26 @@
-// swift-tools-version:5.0
-
+// swift-tools-version:5.1
 import PackageDescription
 
 let package = Package(
-    name: "users",
+    name: "UserService",
+    platforms: [
+       .macOS(.v10_15)
+    ],
     products: [
+        .executable(name: "Run", targets: ["Run"]),
         .library(name: "App", targets: ["App"]),
-        .executable(name: "Run", targets: ["Run"])
     ],
     dependencies: [
-        .package(url: "https://github.com/vapor/vapor.git", from: "3.3.0"),
-        .package(url: "https://github.com/vapor/fluent-mysql.git", from: "3.0.1"),
-        .package(url: "https://github.com/vapor/jwt.git", from: "3.0.0"),
-        .package(url: "https://github.com/krzyzanowskim/CryptoSwift.git", from: "1.0.0"),
-        .package(url: "https://github.com/vapor-community/sendgrid-provider.git", from: "3.0.0"),
-        .package(url: "https://github.com/skelpo/JWTDataProvider.git", from: "1.0.0"),
-        .package(url: "https://github.com/skelpo/vapor-request-storage.git", from: "0.1.0"),
-        .package(url: "https://github.com/skelpo/JWTMiddleware", from: "0.9.0"),
-        .package(url: "https://github.com/skelpo/APIErrorMiddleware.git", from: "0.1.0"),
-        .package(url: "https://github.com/skelpo/JWTVapor.git", from: "0.13.0"),
+        // 💧 A server-side Swift web framework.
+        .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0-beta"),
+        .package(url: "https://github.com/vapor/fluent.git", from: "4.0.0-beta"),
+        .package(url: "https://github.com/skelpo/sendgrid-provider.git", from: "4.0.0"),
+        .package(url: "https://github.com/proggeramlug/SimpleJWTMiddleware", .branch("master")),
+        .package(url: "https://github.com/vapor/fluent-mysql-driver.git", from: "4.0.0-beta"),
     ],
     targets: [
-        .target(name: "App", dependencies: ["Vapor", "VaporRequestStorage", "FluentMySQL", "APIErrorMiddleware", "JWTMiddleware", "SendGrid", "JWT", "CryptoSwift", "JWTDataProvider", "JWTVapor"],
-                exclude: [
-                    "Config",
-                    "Public",
-                    "Resources",
-                    ]),
+        .target(name: "App", dependencies: ["Fluent", "SendGrid", "FluentMySQLDriver", "SimpleJWTMiddleware", "Vapor"]),
         .target(name: "Run", dependencies: ["App"]),
-        .testTarget(name: "AppTests", dependencies: ["App"])
+        .testTarget(name: "AppTests", dependencies: ["App", "XCTVapor"])
     ]
 )
-

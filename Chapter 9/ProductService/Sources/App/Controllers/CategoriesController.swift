@@ -1,43 +1,44 @@
-import JWTMiddleware
 import Fluent
 import Vapor
 
 final class CategoriesController {
     
-    func get(_ request: Request)throws -> Future<[CategoryResponse]> {
-        return try Category.query(on: request).all().map(to: [CategoryResponse].self) { cats in
+    func get(_ request: Request)throws -> EventLoopFuture<[CategoryResponse]> {
+        return Category.query(on: request.db).all().map { cats in
             return cats.map { CategoryResponse(id: $0.id!, name: $0.name) }
         }
     }
     
-    func new(_ request: Request, _ input: CategoryInput)throws -> Future<CategoryResponse> {
+    func new(_ request: Request)throws -> EventLoopFuture<CategoryResponse> {
+        let input = try request.content.decode(CategoryInput.self)
         let category = Category(name: input.name)
-        return category.save(on: request).map(to: CategoryResponse.self) { category in
+        return category.save(on: request.db).map { _ in
             return CategoryResponse(id: category.id!, name: category.name)
         }
     }
     
-    func edit(_ request: Request, _ input: CategoryInput)throws -> Future<CategoryResponse> {
-        let id = try request.parameters.next(Int.self)
+    func edit(_ request: Request)throws -> EventLoopFuture<CategoryResponse> {
+        let id = try request.query.get(Int?.self)
+        let input = try request.content.decode(CategoryInput.self)
         
-        return Category.query(on: request).filter(\.id == id).all().flatMap(to: CategoryResponse.self) { categories in
+        return Category.query(on: request.db).filter(\.$id == id).all().flatMap { categories in
             if categories.count == 0 {
-                throw Abort(.badRequest, reason: "No product. found!")
+                return request.eventLoop.makeFailedFuture(Abort(.badRequest, reason: "No product. found!"))
             }
             let category = categories.first!
             
             category.name = input.name
             
-            return category.save(on: request).map(to: CategoryResponse.self) { category in
+            return category.save(on: request.db).map { _ in
                 return CategoryResponse(id: category.id!, name: category.name)
             }
         }
     }
     
-    func delete(_ request: Request)throws -> Future<HTTPStatus> {
-        let id = try request.parameters.next(Int.self)
+    func delete(_ request: Request)throws -> EventLoopFuture<HTTPStatus> {
+        let id = try request.query.get(Int.self)
         
-        return Category.query(on: request).filter(\.id == id).delete().map(to: HTTPStatus.self) { _ in
+        return Category.query(on: request.db).filter(\.$id == id).delete().map { _ in
             return .ok
         }
     }

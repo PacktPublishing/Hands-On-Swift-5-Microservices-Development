@@ -13,9 +13,9 @@ struct CreateOrder: Migration {
             .field("street", .string, .required)
             .field("zip", .string, .required)
             .field("city", .string, .required)
-            .field("createdAt", .date)
-            .field("updatedAt", .date)
-            .field("deletedAt", .date)
+            .field("createdAt", .datetime)
+            .field("updatedAt", .datetime)
+            .field("deletedAt", .datetime)
             .create()
     }
 

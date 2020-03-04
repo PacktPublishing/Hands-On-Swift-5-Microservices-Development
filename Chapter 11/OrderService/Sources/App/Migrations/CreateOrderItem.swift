@@ -9,9 +9,9 @@ struct CreateOrderItem: Migration {
             .field("productId", .int, .required)
             .field("quantity", .int, .required)
             .field("orderId", .int, .required)
-            .field("createdAt", .date)
-            .field("updatedAt", .date)
-            .field("deletedAt", .date)
+            .field("createdAt", .datetime)
+            .field("updatedAt", .datetime)
+            .field("deletedAt", .datetime)
             .create()
     }
 

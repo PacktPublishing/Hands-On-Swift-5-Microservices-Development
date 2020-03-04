@@ -1,18 +1,15 @@
-import Foundation
 import Vapor
-import JSON
 import JWT
-import JWTMiddleware
 
-struct RefreshToken: IdentifiableJWTPayload {
-    let id: User.ID
+struct RefreshToken: JWTPayload {
+    let id: Int
     let iat: TimeInterval
     let exp: TimeInterval
     
-    init(user: User, expiration: TimeInterval = 24 * 60 * 60 * 30)throws {
+    init(user: User, expiration: TimeInterval = 24 * 60 * 60 * 30) {
         let now = Date().timeIntervalSince1970
         
-        self.id = try user.requireID()
+        self.id = user.id ?? 0
         self.iat = now
         self.exp = now + expiration
     }

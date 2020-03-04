@@ -1,4 +1,0 @@
-module CCryptoOpenSSL {
-    umbrella "/Users/amlug/Shop Backend/UserService/.build/checkouts/crypto/Sources/CCryptoOpenSSL/include"
-    export *
-}

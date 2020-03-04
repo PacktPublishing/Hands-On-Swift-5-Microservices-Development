@@ -7,9 +7,9 @@ struct CreateOrderPayment: Migration {
             .field("totalAmount", .int, .required)
             .field("method", .string, .required)
             .field("orderId", .int, .required)
-            .field("createdAt", .date)
-            .field("updatedAt", .date)
-            .field("deletedAt", .date)
+            .field("createdAt", .datetime)
+            .field("updatedAt", .datetime)
+            .field("deletedAt", .datetime)
             .create()
     }
 

@@ -1,48 +1,41 @@
-import JWTDataProvider
-import JWTMiddleware
-import CryptoSwift
 import SendGrid
-import Crypto
 import Fluent
 import Vapor
-import JWT
+import JWTKit
+import Crypto
+import SimpleJWTMiddleware
 
 final class AuthController: RouteCollection {
-    private let jwtService: JWTService
+    var bodyCache:[String:String] = [:]
+    let sendgridClient: SendGridClient
     
-    init(jwtService: JWTService) {
-        self.jwtService = jwtService
+    init(_ sgc: SendGridClient) {
+        self.sendgridClient = sgc
     }
     
-    func boot(router: Router) throws {
-        let auth = router
-        
-        auth.post("accessToken", use: refreshAccessToken)
-        
-        let protected = auth.grouped(JWTAuthenticatableMiddleware<User>())
-        protected.post("login", use: login)
-        
-        auth.post(User.self, at: "register", use: register)
+    func boot(routes: RoutesBuilder) throws {
+        routes.post("register", use: register)
+        routes.post("login", use: login)
+        routes.post("accessToken", use: refreshAccessToken)
+        routes.post("newPassword", use: newPassword)
     }
     
-    func register(_ request: Request, _ user: User)throws -> Future<UserSuccessResponse> {
-        try user.validate()
+    func register(_ request: Request) throws -> EventLoopFuture<UserSuccessResponse> {
+        let user_ = try request.content.decode(NewUserInput.self)
         
-        let count = User.query(on: request).filter(\.email == user.email).count()
-        return count.map(to: User.self) { count in
-            guard count < 1 else { throw Abort(.badRequest, reason: "This email is already registered.") }
-            return user
-        }.flatMap(to: User.self) { (user) in
-            user.password = try BCrypt.hash(user.password)
+        let user = try User(user_.email, user_.firstname, user_.lastname, user_.password)
+        
+        return User.query(on: request.db).filter(\.$email == user.email).all().flatMap { all -> EventLoopFuture<User> in
+            if all.count > 0 {
+                return request.eventLoop.makeFailedFuture(Abort(.badRequest, reason: "This email is already registered."))
+            }
             
-            return user.save(on: request)
-        }.flatMap(to: User.self) { (user) in
-            
-            let client = try request.make(SendGridClient.self)
-            
+            return user.save(on: request.db).transform(to: user)
+        }.map { user in
+            return UserSuccessResponse(user: UserResponse(user: user))
+        }.flatMap { (user) in
             let subject: String = "Your Registration"
-            let body: String = "Please activate: "
-            
+            let body: String = "Welcome!"
             let name = [user.firstname, user.lastname].compactMap({ $0 }).joined(separator: " ")
             let from = EmailAddress(email: "info@domain.com", name: nil)
             let address = EmailAddress(email: user.email, name: name)
@@ -52,49 +45,112 @@ final class AuthController: RouteCollection {
                 "value": body
                 ]])
             
-            return try client.send([email], on: request).transform(to: user)
+            return try self.sendGridClient.send([email], on: request).transform(to: user)
         }
-        .response(on: request)
     }
     
-    func refreshAccessToken(_ request: Request)throws -> Future<[String: String]> {
-        let refreshToken = try request.content.syncGet(String.self, at: "refreshToken")
-        let refreshJWT = try JWT<RefreshToken>(from: refreshToken, verifiedUsing: self.jwtService.signer)
-        try refreshJWT.payload.verify(using: self.jwtService.signer)
+    func newPassword(_ request: Request)throws -> EventLoopFuture<UserSuccessResponse> {
+        let data = try request.content.decode(PasswordInput.self)
+        let email:String = data.email
+        
+        var password:String = ""
+        
+        return User.query(on: request.db).filter(\.$email == email).first().flatMap { user -> EventLoopFuture<User> in
+            let str:String = SHA512.hash(data: Date().description.data(using: .utf8)!).description
+            let index = str.index(str.startIndex, offsetBy: 8)
+            password = String(str[..<index])
+            do {
+                user!.password = try Bcrypt.hash(password)
+            }
+            catch {}
+            
+            return user!.save(on: request.db).transform(to: user!)
+        }.flatMap { user -> EventLoopFuture<User> in
+            
+                let contentString = "Your new password is \(password)."
+                    
+                let name = [user.firstname, user.lastname].compactMap({ $0 }).joined(separator: " ")
+                    let from = EmailAddress(email: "info@myparkplatz24.de", name: nil)
+                let address = EmailAddress(email: user.email, name: name)
+                let header = Personalization(to: [address], subject: "New Password")
+                var c = [[
+                    "type": "text/plain",
+                    "value": contentString
+                ]]
+                c.append([
+                        "type": "text/html", "value": contentString])
+                
+                let email = SendGridEmail(personalizations: [header], from: from, subject: "New Password", content: c)
+                
+                return self.sendgridClient.send([email], on: request.eventLoop).transform(to: user)
+            
+            
+        }.flatMap { user in
+            return user.save(on: request.db).transform(to: UserSuccessResponse(user: UserResponse(user: user)))
+        }
+    }
+    
+    /// A route handler that returns a new access and refresh token for the user.
+    func refreshAccessToken(_ request: Request)throws -> EventLoopFuture<RefreshTokenResponse> {
+        let data = try request.content.decode(RefreshTokenInput.self)
+        let refreshToken = data.refreshToken
+        let jwtPayload:RefreshToken = try request.application.jwt.signers.verify(refreshToken, as: RefreshToken.self)
+        
+        let userID = jwtPayload.id
 
-        let userID = refreshJWT.payload.id
-        let user = User.find(userID, on: request).unwrap(or: Abort(.badRequest, reason: "No user found with ID '\(userID)'."))
-        
-        return user.flatMap(to: (JSON, Payload).self) { user in
+        return User.query(on: request.db).filter(\.$id == userID).all().flatMap { users in
+            if users.count == 0 {
+                return request.eventLoop.makeFailedFuture(Abort(.badRequest, reason: "No user found."))
+            }
+            let user: User = users.first!
             
-            let payload = try App.Payload(user: user)
-            return try request.payloadData(self.jwtService.sign(payload), with: ["userId": "\(user.requireID())"], as: JSON.self).and(result: payload)
-        }.map(to: [String: String].self) { payloadData in
-            let payload = try payloadData.0.merge(payloadData.1.json())
             
-            let token = try self.jwtService.sign(payload)
-            return ["status": "success", "accessToken": token]
+            let payload = Payload()
+            
+            var payloadString = ""
+            do {
+                payloadString = try request.application.jwt.signers.sign(payload)
+            }
+            catch {}
+            
+            return user.save(on: request.db).map { _ in
+                return ["status": "success", "accessToken": payloadString]
+            }
         }
     }
     
-    func login(_ request: Request)throws -> Future<LoginResponse> {
-        let user = try request.requireAuthenticated(User.self)
-        let userPayload = try Payload(user: user)
+    
+    func login(_ request: Request)throws -> EventLoopFuture<LoginResponse> {
+        let data = try request.content.decode(LoginInput.self)
         
-        let remotePayload = try request.payloadData(
-            self.jwtService.sign(userPayload),
-            with: ["userId": "\(user.requireID())"],
-            as: JSON.self
-        )
-        
-        return remotePayload.map(to: LoginResponse.self) { remotePayload in
-            let payload = try remotePayload.merge(userPayload.json())
-            
-            let accessToken = try self.jwtService.sign(payload)
-            let refreshToken = try self.jwtService.sign(RefreshToken(user: user))
-            
-            let userResponse = UserResponse(user: user, addresses: nil)
-            return LoginResponse(accessToken: accessToken, refreshToken: refreshToken, user: userResponse)
+        return User.query(on: request.db).filter(\.$email == data.email).all().flatMap { users in
+            if users.count == 0 {
+                return request.eventLoop.makeFailedFuture(Abort(.unauthorized))
+            }
+            let user = users.first!
+            var check = false
+            do {
+                check = try Bcrypt.verify(data.password, created: user.password)
+            }
+            catch {}
+            if check {
+                let userPayload = Payload(id: user.id, email: user.email)
+               
+                   do {
+                        let accessToken = try request.application.jwt.signers.sign(userPayload)
+                            let refreshPayload = RefreshToken(user: user)
+                            let refreshToken = try request.application.jwt.signers.sign(refreshPayload)
+                        let userResponse = UserResponse(user: user)
+                        return user.save(on: request.db).transform(to: LoginResponse(accessToken: accessToken, refreshToken: refreshToken, user: userResponse))
+                    }
+                    catch {
+                        return request.eventLoop.makeFailedFuture(Abort(.internalServerError))
+                }
+            }
+            else {
+                return request.eventLoop.makeFailedFuture(Abort(.unauthorized))
+            }
         }
     }
 }
+

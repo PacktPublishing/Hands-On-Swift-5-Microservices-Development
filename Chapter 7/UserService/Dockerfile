@@ -1,30 +1,34 @@
-FROM swift:4.2
+FROM swift:5.1.2 as builder
 
-ARG ENVIRONMENT
-ENV ENVIRONMENT ${ENVIRONMENT:-production}
-ENV DEBIAN_FRONTEND noninteractive 
-ENV TZ=Europe/Berlin
-ENV TERM xterm
-RUN apt-get update && apt-get -y install wget lsb-release apt-transport-https
-RUN wget -q https://repo.vapor.codes/apt/keyring.gpg -O- | apt-key add -
-RUN echo "deb https://repo.vapor.codes/apt $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/vapor.list
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+# For local build, add `--build-arg env=docker`
+# In your application, you can use `Environment.custom(name: "docker")` to check if you're in this env
 
-USER root
+RUN apt-get -qq update && apt-get install -y \
+  libssl-dev zlib1g-dev \
+  && rm -r /var/lib/apt/lists/*
 
-RUN apt-get update && apt-get install 
-RUN mkdir /root/vapor
-ADD . /root/vapor
-WORKDIR /root/vapor
-RUN cd /root/vapor && rm -rf .build
-RUN swift package update
-RUN swift build --configuration release
-#EXPOSE 8080
-RUN export JWT_SECRET='ohFcON5JWImUWAa-SCC2yYOsFwlHwj3ZBOqpDNFX6JbOqkGrSaGjQWkieAj1fJhuYpTQq7A__s0G6yujmnE6N-I9UHEqXmKxI87ek9z5uxhzIeIHBS6ToyoXHECMS_jN8MbsM4bjec7FLuO9bVNJALFmCgEwcSzZdP9zFHjlj32ATWuSwXbNHNAJnk2IUk2eYiMNiG1BzZM8OApsCF1ASa9zcXdm2QYtOat7hhP-Uo6y_zflx9Ahg-CUBqPTpfOUUuJoGjeWgbhy0-ISveueGjzj7x5UYKNCRZyCircJ_-v51wFvx1lbgRmqH4eJy0dh8Ra-zmzLsFCDs2Akz8Oy0Q'
-RUN export DATABASE_HOSTNAME='users.cpzpcvtsi0py.us-east-1.rds.amazonaws.com'
-RUN export DATABASE_USER='users'
-RUN export DATABASE_PASSWORD='k3AjY.eHcPVWxWM'
-RUN export DATABASE_DB='users'
-RUN export USER_JWT_D='IiLd9ex8LnXsFQ52jeK2HYPqf3-o6bT1PR_gM570kT0SkrH6TiwJowFuDTJ14qSIu6L0wPUCxbyRtH8gmqs2xAaXO5Zagj7vaMduAl8NCud_eKePKvxAhKGc9Ip0ApyJZCnCHqhOyZ1P0yyM_bYJLmgvQfQ2K-ByfT5BExLT54EFwUJ63tPQiU0gyycDULZAGTQBPzJNB5yWrVFW6s_VPZo73wd_4r86VErMeMgT0u4Nb5FihOcCjsdHt8X43oU4sf-YnHdzO7reHS8g11JLHrWL_sQlrC-gtJFq88UTzsevdsziDTByuB-Kf8cPATXPhTaisEb-TuURR_61wGLbQQ'
-CMD .build/release/Run --hostname=0.0.0.0 --port=8080
+ARG env
+RUN mkdir /root/.ssh/
+RUN apt-get -qq update && apt-get install -y \
+libssl-dev zlib1g-dev \
+&& rm -r /var/lib/apt/lists/*
+WORKDIR /app
+COPY . .
+RUN mkdir -p /build/lib && cp -R /usr/lib/swift/linux/*.so* /build/lib
+RUN swift package --enable-pubgrub-resolver resolve && \
+    swift build -c release --verbose && \
+    mv `swift build -c release --show-bin-path` /build/bin
 
+# Production image
+FROM ubuntu:18.04
+ARG env
+# DEBIAN_FRONTEND=noninteractive for automatic UTC configuration in tzdata
+RUN apt-get -qq update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+libatomic1 libicu60 libxml2 libcurl4 libz-dev libbsd0 tzdata \
+&& rm -r /var/lib/apt/lists/*
+WORKDIR /app
+COPY --from=builder /build/bin/Run .
+#COPY --from=builder /build/bin/*.so /usr/lib/
+COPY --from=builder /build/lib/* /usr/lib/
+
+ENTRYPOINT ./Run serve --hostname 0.0.0.0 --port 8080

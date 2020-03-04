@@ -45,7 +45,7 @@ final class OrderController {
                 })
             }
             
-            return saving.flatten(on: req.make()).map {
+            return saving.flatten(on: req.eventLoop).map {
                 return OrderResponse(order: order, items: items)
             }
         }

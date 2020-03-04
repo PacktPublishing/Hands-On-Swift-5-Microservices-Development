@@ -1,17 +1,12 @@
-import Fluent
 import Vapor
 
-func routes(_ r: Routes, _ c: Container) throws {
-    r.get { req in
-        return "It works!"
-    }
+func routes(_ app: Application) throws {
+    let root = app.grouped(.anything, "users")
+    let auth = root.grouped(JWTMiddleware())
 
-    r.get("hello") { req -> String in
-        return "Hello, world!"
+    root.get("health") { request in
+        return "All good!"
     }
-
-    let todoController = try TodoController(db: c.make())
-    r.get("todos", use: todoController.index)
-    r.post("todos", use: todoController.create)
-    r.on(.DELETE, "todos", ":todoID", use: todoController.delete)
+    
+    try root.register(collection: TodoController())
 }

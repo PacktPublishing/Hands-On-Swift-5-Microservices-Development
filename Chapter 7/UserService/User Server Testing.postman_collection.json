@@ -1,0 +1,131 @@
+{
+	"info": {
+		"_postman_id": "edb1e272-46a7-4088-9860-d84a6d8d8af6",
+		"name": "User Server Testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1b3cf967-6ec3-4f12-a2a3-804b8147f817",
+						"exec": [
+							"var token = pm.response.json()[\"accessToken\"];",
+							"pm.environment.set(\"TOKEN\", token);",
+							"pm.test(\"success value existent\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.status).to.eql('success');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"email@domain.com\",\n\t\"password\": \"test123\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/users/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"users",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check Status",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9d7453cd-6b03-4ac1-a554-00708f44e712",
+						"exec": [
+							"pm.test(\"success call\", function () {",
+							"    pm.expect(pm.response.json().status).to.eql('success');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"users"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{TOKEN}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "0ea3d758-f998-4f0e-96e6-e3dcd1cfd037",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "beb9aa1e-1b7e-4601-8e14-3c35f924759d",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "c67b9001-7348-4b31-84bb-c786ed166861",
+			"key": "TOKEN",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

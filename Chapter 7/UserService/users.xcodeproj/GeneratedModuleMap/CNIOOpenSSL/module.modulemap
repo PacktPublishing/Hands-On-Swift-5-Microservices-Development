@@ -1,4 +1,0 @@
-module CNIOOpenSSL {
-    umbrella "/Users/amlug/Shop Backend/UserService/.build/checkouts/swift-nio-ssl/Sources/CNIOOpenSSL/include"
-    export *
-}

@@ -2,29 +2,39 @@ import Fluent
 import FluentMySQLDriver
 import Vapor
 
-// Called before your application initializes.
 func configure(_ app: Application) throws {
-    app.provider(FluentProvider())
+    
+    
+    guard
+        let jwksString = Environment.process.JWKS
+        else {
+            fatalError("No value was found at the given public key environment 'JWKS'")
+        }
+    
 
-    app.register(extension: MiddlewareConfiguration.self) { middlewares, app in
-        middlewares.use(app.make(ErrorMiddleware.self))
+    guard
+        let urlString = Environment.process.MYSQL_CRED
+    else {
+        fatalError("No value was found at the given public key environment 'MYSQL_CRED'")
     }
-    
-    let url = URL(string: Environment.get("MYSQL_URL") ?? "mysql://user:password@localhost:3306/db")!
-    
-    app.databases.mysql(configuration: MySQLConfiguration(url: url)!, on: app.make())
-    
-    app.register(Migrations.self) { c in
-        var migrations = Migrations()
-        migrations.add(CreateOrder(), to: .mysql)
-        migrations.add(CreateOrderItem(), to: .mysql)
-        migrations.add(CreateOrderPayment(), to: .mysql)
-        return migrations
+
+    guard
+        let url = URL(string: urlString)
+    else {
+        fatalError("Cannot parse: \(urlString) correctly.")
     }
+
+    app.databases.use(try DatabaseDriverFactory.mysql(url: url), as: DatabaseID.mysql)
+    app.middleware.use(CORSMiddleware())
+//    app.middleware.use(ErrorMiddleware(())
     
-    app.register(JWTMiddleware.self) { container in
-        return JWTMiddleware()
-    }
+    try app.jwt.signers.use(jwksJSON: jwksString)
+    app.server.configuration.supportCompression = true
+    
+    app.migrations.add(CreateOrder())
+    app.migrations.add(CreateOrderItem())
+    app.migrations.add(CreateOrderPayment())
     
     try routes(app)
+
 }

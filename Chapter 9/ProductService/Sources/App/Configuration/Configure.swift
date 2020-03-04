@@ -1,54 +1,38 @@
-import JWTDataProvider
-import Authentication
-import FluentMySQL
-import JWTVapor
-import APIErrorMiddleware
+import Fluent
+import FluentMySQLDriver
 import Vapor
-import VaporRequestStorage
+import JWTKit
+import SendGrid
 
-public func configure(
-    _ config: inout Config,
-    _ env: inout Environment,
-    _ services: inout Services
-) throws {
+// Called before your application initializes.
+func configure(_ app: Application) throws {
     
-    try services.register(AuthenticationProvider())
-    try services.register(FluentMySQLProvider())
-    try services.register(StorageProvider())
+    guard
+        let jwksString = Environment.process.JWKS
+        else {
+            fatalError("No value was found at the given public key environment 'JWKS'")
+        }
     
-    services.register(Router.self) { container -> EngineRouter in
-        let router = EngineRouter.default()
-        try routes(router, container)
-        return router
+
+    guard
+        let urlString = Environment.process.MYSQL_CRED
+    else {
+        fatalError("No value was found at the given public key environment 'MYSQL_CRED'")
     }
+
+    guard
+        let url = URL(string: urlString)
+    else {
+        fatalError("Cannot parse: \(urlString) correctly.")
+    }
+
+    app.databases.use(try DatabaseDriverFactory.mysql(url: url), as: DatabaseID.mysql)
+    app.middleware.use(CORSMiddleware())
     
-    var middlewares = MiddlewareConfig()
-    middlewares.use(CORSMiddleware())
-    middlewares.use(ErrorMiddleware.self)
-    middlewares.use(APIErrorMiddleware(environment: env, specializations: [
-        ModelNotFound()
-    ]))
-    services.register(middlewares)
+    try app.jwt.signers.use(jwksJSON: jwksString)
+    app.server.configuration.supportCompression = true
     
-    var databases = DatabasesConfig()
-    let config = MySQLDatabaseConfig(
-        hostname: Environment.get("DATABASE_HOSTNAME") ?? "localhost",
-        port: Int(Environment.get("DATABASE_PORT") ?? "3306") ?? 3306,
-        username: Environment.get("DATABASE_USER") ?? "root",
-        password: Environment.get("DATABASE_PASSWORD") ?? "password",
-        database: Environment.get("DATABASE_DB") ?? "service_products",
-        transport: env.isRelease ? .cleartext : .unverifiedTLS
-    )
-    let database = MySQLDatabase(config: config)
-    databases.add(database: database, as: .mysql)
-    services.register(databases)
-    
-    var migrations = MigrationConfig()
-    migrations.add(model: Category.self, database: .mysql)
-    migrations.add(model: Product.self, database: .mysql)
-    services.register(migrations)
-    
-    let jwt = JWTDataConfig()
-    services.register(jwt)
-    
+    app.migrations.add(CreateCategory())
+    app.migrations.add(CreateProduct())
+    try routes(app)
 }

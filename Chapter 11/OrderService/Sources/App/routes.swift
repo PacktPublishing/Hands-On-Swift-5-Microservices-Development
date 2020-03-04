@@ -9,9 +9,7 @@ func routes(_ app: Application) throws {
         return "All good."
     }
     
-    let jwtMiddleware = app.make(JWTMiddleware.self)
-    
-    let protected = currentVersion.grouped(jwtMiddleware)
+    let protected = currentVersion.grouped(JWTMiddleware())
 
     let orderController = OrderController()
     protected.post("", use: orderController.post)
