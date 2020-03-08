@@ -15,6 +15,6 @@ struct TodoController {
         return Todo.find(req.parameters.get("todoID"), on: req.db)
             .unwrap(or: Abort(.notFound))
             .flatMap { $0.delete(on: req.db) }
-            .map { .ok }
+            .transform(to: .ok)
     }
 }
