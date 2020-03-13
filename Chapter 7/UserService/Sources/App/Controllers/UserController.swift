@@ -49,7 +49,7 @@ final class UserController: RouteCollection {
         
         return User.query(on: request.db).filter(\.$id == request.payload.id).first().flatMap { user in
             let user = user!
-            return Address.query(on: request.db).filter(\.$userId == user.id).delete().map {
+            return Address.query(on: request.db).filter(\.$userId == user.id!).delete().flatMap {
                 return user.delete(on: request.db).transform(to: .ok)
             }
         }

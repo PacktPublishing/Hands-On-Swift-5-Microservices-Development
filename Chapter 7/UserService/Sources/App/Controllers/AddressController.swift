@@ -47,7 +47,7 @@ final class AddressController: RouteCollection {
     }
     
     func delete(_ request: Request)throws -> EventLoopFuture<HTTPStatus> {
-        let id = try request.query.get(Int?.self)
+        let id = Int(request.parameters.get("id") ?? "0") ?? 0
         
         return Address.query(on: request.db).filter(\.$id == id).filter(\.$userId == request.payload.id).all().flatMap { addresses in
             if addresses.count == 0 {

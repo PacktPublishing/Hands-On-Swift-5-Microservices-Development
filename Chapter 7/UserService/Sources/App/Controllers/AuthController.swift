@@ -33,7 +33,7 @@ final class AuthController: RouteCollection {
             return user.save(on: request.db).transform(to: user)
         }.map { user in
             return UserSuccessResponse(user: UserResponse(user: user))
-        }.flatMap { (user) in
+        }.flatMap { (userResponse) in
             let subject: String = "Your Registration"
             let body: String = "Welcome!"
             let name = [user.firstname, user.lastname].compactMap({ $0 }).joined(separator: " ")
@@ -45,7 +45,7 @@ final class AuthController: RouteCollection {
                 "value": body
                 ]])
             
-            return try self.sendGridClient.send([email], on: request).transform(to: user)
+            return self.sendgridClient.send([email], on: request.eventLoop).transform(to: userResponse)
         }
     }
     
@@ -105,7 +105,7 @@ final class AuthController: RouteCollection {
             let user: User = users.first!
             
             
-            let payload = Payload()
+            let payload = Payload(id: user.id!, email: user.email)
             
             var payloadString = ""
             do {
@@ -114,7 +114,7 @@ final class AuthController: RouteCollection {
             catch {}
             
             return user.save(on: request.db).map { _ in
-                return ["status": "success", "accessToken": payloadString]
+                return RefreshTokenResponse(accessToken: payloadString)
             }
         }
     }
@@ -134,7 +134,7 @@ final class AuthController: RouteCollection {
             }
             catch {}
             if check {
-                let userPayload = Payload(id: user.id, email: user.email)
+                let userPayload = Payload(id: user.id!, email: user.email)
                
                    do {
                         let accessToken = try request.application.jwt.signers.sign(userPayload)

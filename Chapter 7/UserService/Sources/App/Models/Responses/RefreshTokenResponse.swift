@@ -1,4 +1,4 @@
-impüort Vapor
+import Vapor
 
 struct RefreshTokenResponse: Content {
     let status = "success"

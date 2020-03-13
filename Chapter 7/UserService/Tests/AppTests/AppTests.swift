@@ -1,14 +1,15 @@
-import XCTest
-import Vapor
 @testable import App
+import XCTVapor
 
-public class AppTests: XCTestCase {
-    func testBCrypt() {
-        do {
-            let hash = try Bcrypt.hash("password")
-            print(hash)
-        } catch let error {
-            print(error)
+final class AppTests: XCTestCase {
+    func testHelloWorld() throws {
+        let app = Application(.testing)
+        defer { app.shutdown() }
+        try configure(app)
+
+        try app.test(.GET, "hello") { res in
+            XCTAssertEqual(res.status, .ok)
+            XCTAssertEqual(res.body.string, "Hello, world!")
         }
     }
 }
