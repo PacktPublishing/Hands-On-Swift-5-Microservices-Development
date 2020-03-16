@@ -18,20 +18,25 @@ final class CategoriesController {
     }
     
     func edit(_ request: Request)throws -> EventLoopFuture<CategoryResponse> {
-        let id = try request.query.get(Int?.self)
-        let input = try request.content.decode(CategoryInput.self)
-        
-        return Category.query(on: request.db).filter(\.$id == id).all().flatMap { categories in
-            if categories.count == 0 {
-                return request.eventLoop.makeFailedFuture(Abort(.badRequest, reason: "No product. found!"))
-            }
-            let category = categories.first!
+        if let id = request.parameters.get("id", as: Int.self)
+        {
+            let input = try request.content.decode(CategoryInput.self)
             
-            category.name = input.name
-            
-            return category.save(on: request.db).map { _ in
-                return CategoryResponse(id: category.id!, name: category.name)
+            return Category.query(on: request.db).filter(\.$id == id).all().flatMap { categories in
+                if categories.count == 0 {
+                    return request.eventLoop.makeFailedFuture(Abort(.badRequest, reason: "No product. found!"))
+                }
+                let category = categories.first!
+                
+                category.name = input.name
+                
+                return category.save(on: request.db).map { _ in
+                    return CategoryResponse(id: category.id!, name: category.name)
+                }
             }
+        }
+        else {
+            throw Abort(.badRequest, reason: "No input given.")
         }
     }
     
