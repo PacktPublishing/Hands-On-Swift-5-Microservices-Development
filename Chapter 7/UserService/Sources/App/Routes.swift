@@ -11,7 +11,7 @@ func routes(_ app: Application, _ sendgridClient: SendGridClient) throws {
         return "All good!"
     }
     
-    try root.register(collection: AddressController())
+    try auth.register(collection: AddressController())
     try root.register(collection: AuthController(sendgridClient))
     try auth.register(collection: UserController())
 }
