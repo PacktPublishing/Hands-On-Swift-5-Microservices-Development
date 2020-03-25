@@ -4,7 +4,29 @@ Hands-On Microservices with Swift 5, published by Packt!
 # IMPORTANT NOTICE #
 This code here is continually updated until Vapor 4. When Vapor 4 is fulled released the book will be updated as well, you will receive an updated version if you have ordered the eBook version.
 
+# Using compoer-compose #
+Make sure you have the `docker-compose.yml` updated to reflect your environment variables. 
+For you to run any service using the `docker-compose.yml` you need to run the following commands:
+```
+docker-compose up db
+```
+Then use another terminal (or shell/bash) window to run:
+```
+docker-compose up migrate
+docker-compose up app
+```
+This follows the standard Vapor docker-compose.yml and will get your app up and running.
+
 # Change Log #
+## 03/24/20: Chapter 7 Update ##
+The `docker-compose.yml` is now working as expected with MySQL8. Small fixes within the service:
+- A typo disabling `JWTMiddleware` from working in address routes.
+- More sophisticated error management.
+- Docker-compose update.
+- Sample .env file is now provided: `.env_sample`
+
+*PostgreSQL Version now available:* You can now also use PostgreSQL if you prefer that in chapter 7. Other chapters will follow.
+
 ## 03/15/20: Chapter 9 Update ##
 The product service in chapter 9 is now compatible with the latest Vapor RC.
 
