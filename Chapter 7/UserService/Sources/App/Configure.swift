@@ -16,11 +16,23 @@ public func configure(_ app: Application) throws {
            }
     guard let url = URL(string: mysqlUrl) else { fatalError("Cannot parse: \(mysqlUrl) correctly.")
     }
+    
     app.databases.use(try .mysql(url: url), as: .mysql)
     app.middleware.use(CORSMiddleware())
     app.middleware.use(ErrorMiddleware() { request, error in
-        // TODO: Make this much nicer.
-        return Response(status: .internalServerError)
+        struct ErrorResponse: Content {
+            var error: String
+        }
+        let data: Data?
+        do {
+            data = try JSONEncoder().encode(ErrorResponse(error: "\(error)"))
+        }
+        catch {
+            data = "{\"error\":\"\(error)\"}".data(using: .utf8)
+        }
+        let res = Response(status: .internalServerError, body: Response.Body(data: data!))
+        res.headers.replaceOrAdd(name: .contentType, value: "application/json")
+        return res
     })
     
     try app.jwt.signers.use(jwksJSON: jwksString)
