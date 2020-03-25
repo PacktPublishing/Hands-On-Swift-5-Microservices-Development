@@ -21,14 +21,13 @@ volumes:
 
 x-shared_environment: &shared_environment
   LOG_LEVEL: ${LOG_LEVEL:-debug}
-  DATABASE_HOST: db
-  DATABASE_NAME: vapor_database
-  DATABASE_USERNAME: vapor_username
-  DATABASE_PASSWORD: vapor_password
-
+  MYSQL_CRED: mysql://vapor_username:vapor_password@db:3306/vapor_database?ssl=false
+  JWKS: '{"keys":[{"kty":"RSA","d":"<< insert d >>","e":"AQAB","use":"sig","kid":"backend","alg":"RS256","n":"<< insert n >>"}]}'
+  SENDGRID_API_KEY: asdf
+  
 services:
   app:
-    image: template:latest
+    image: userservice:latest
     build:
       context: .
     environment:
@@ -39,7 +38,7 @@ services:
       - '8080:80'
     command: ["serve", "--env", "production", "--hostname", "0.0.0.0", "--port", "80"]
   migrate:
-    image: template:latest
+    image: userservice:latest
     build:
       context: .
     environment:
@@ -50,7 +49,7 @@ services:
     deploy:
       replicas: 0
   revert:
-    image: template:latest
+    image: userservice:latest
     build:
       context: .
     environment:
@@ -67,5 +66,6 @@ services:
       MYSQL_PASSWORD: vapor_password
       MYSQL_DATABASE: vapor_database
       MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+    command: ["--default-authentication-plugin=mysql_native_password"]
     ports:
       - '3306:3306'
