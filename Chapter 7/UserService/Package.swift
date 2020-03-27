@@ -12,7 +12,7 @@ let package = Package(
         .package(url: "https://github.com/vapor/fluent.git", from: "4.0.0-rc"),
         .package(url: "https://github.com/vapor/fluent-mysql-driver.git", from: "4.0.0-rc"),
         .package(url: "https://github.com/proggeramlug/SimpleJWTMiddleware.git", .branch("master")),
-        .package(url: "https://github.com/skelpo/sendgrid-provider.git", .branch("master"))
+        .package(url: "https://github.com/skelpo/sendgrid-provider.git", from: "4.0.0")
         
     ],
     targets: [

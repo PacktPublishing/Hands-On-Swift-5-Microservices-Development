@@ -104,9 +104,9 @@
         "package": "sendgrid-provider",
         "repositoryURL": "https://github.com/skelpo/sendgrid-provider.git",
         "state": {
-          "branch": "master",
+          "branch": null,
           "revision": "6be9fcc0c04d5616e7566e9aa17821c995705aa4",
-          "version": null
+          "version": "4.0.4"
         }
       },
       {
