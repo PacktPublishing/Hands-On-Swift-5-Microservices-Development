@@ -18,6 +18,10 @@ docker-compose up app
 This follows the standard Vapor docker-compose.yml and will get your app up and running.
 
 # Change Log #
+## 04/13/20: Chapter 6 Update ##
+Updated the dependency to Vapor 4.0.0. Also an update to the _SimpleJWTMiddleware_ has been performed in another repository.
+
+_long COVID-19 related break_ 
 ## 03/24/20: Chapter 7 Update ##
 The `docker-compose.yml` is now working as expected with MySQL8. Small fixes within the service:
 - A typo disabling `JWTMiddleware` from working in address routes.
