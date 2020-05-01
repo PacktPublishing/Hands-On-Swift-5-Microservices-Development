@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/swift-server/async-http-client.git",
         "state": {
           "branch": null,
-          "revision": "e2636a4c24e646d3e480fc666da0c090818beb09",
-          "version": "1.1.0"
+          "revision": "037b70291941fe43de668066eb6fb802c5e181d2",
+          "version": "1.1.1"
         }
       },
       {
@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/vapor/fluent.git",
         "state": {
           "branch": null,
-          "revision": "4401a7ecceabc23052ed4255c2b1d68dc20e71fb",
-          "version": "4.0.0-rc.2"
+          "revision": "dba22d5a6115092482669efe5492d800ace4da38",
+          "version": "4.0.0-rc.2.2"
         }
       },
       {
@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/vapor/fluent-kit.git",
         "state": {
           "branch": null,
-          "revision": "4f3ec755ea8a011eeb056c34ac18c9ec826b402b",
-          "version": "1.0.0-rc.1.19"
+          "revision": "36d8ba6d026ac3363f5cd4d158fe7d082741bdab",
+          "version": "1.0.0-rc.1.25"
         }
       },
       {
@@ -51,8 +51,8 @@
         "repositoryURL": "https://github.com/vapor/fluent-postgres-driver.git",
         "state": {
           "branch": null,
-          "revision": "a7b7e341fe998ac1a20eac21962af934146a5de1",
-          "version": "2.0.0-rc.1.1"
+          "revision": "2df7722d2bddc470a9b7080b8d88c9976f237a81",
+          "version": "2.0.0-rc.2"
         }
       },
       {
@@ -60,8 +60,8 @@
         "repositoryURL": "https://github.com/vapor/jwt.git",
         "state": {
           "branch": null,
-          "revision": "cc6865152790d832af865dffcf5445c5c236898a",
-          "version": "4.0.0-rc.1"
+          "revision": "8c1681e9497b72430fa62962f61339d3573c7b0f",
+          "version": "4.0.0-rc.2"
         }
       },
       {
@@ -69,8 +69,8 @@
         "repositoryURL": "https://github.com/vapor/jwt-kit.git",
         "state": {
           "branch": null,
-          "revision": "f1d0e511420ab4ea0f8445a80b74cd347bee2ee6",
-          "version": "4.0.0-rc.1.1"
+          "revision": "b5aa3d4eb91b54d0bd31a1a0c238199f2bf65969",
+          "version": "4.0.0-rc.1.4"
         }
       },
       {
@@ -78,8 +78,8 @@
         "repositoryURL": "https://github.com/vapor/postgres-kit.git",
         "state": {
           "branch": null,
-          "revision": "8f6d4fa648c5aa1d6ecdefea4d7fe25f97e599d0",
-          "version": "2.0.0-rc.1.1"
+          "revision": "152f69bfc0d767d29c9be427cd60169f9f62c8bd",
+          "version": "2.0.0"
         }
       },
       {
@@ -87,8 +87,8 @@
         "repositoryURL": "https://github.com/vapor/postgres-nio.git",
         "state": {
           "branch": null,
-          "revision": "4871046bec40a5dbbc6aca572f655a765faba04f",
-          "version": "1.0.0-rc.1.2"
+          "revision": "25aa31fdd55ea119edee270ce4bd7bd4bd59fdf7",
+          "version": "1.1.0"
         }
       },
       {
@@ -96,17 +96,17 @@
         "repositoryURL": "https://github.com/vapor/routing-kit.git",
         "state": {
           "branch": null,
-          "revision": "35da702471cbcc308f58d38aa8fea971fa3fb166",
-          "version": "4.0.0"
+          "revision": "e7f2d5bd36dc65a9edb303541cb678515a7fece3",
+          "version": "4.1.0"
         }
       },
       {
-        "package": "SendGrid",
+        "package": "sendgrid-provider",
         "repositoryURL": "https://github.com/skelpo/sendgrid-provider.git",
         "state": {
           "branch": null,
-          "revision": "73dd9edbbbd187707c5b375fb622468cc5056624",
-          "version": "4.0.3"
+          "revision": "6be9fcc0c04d5616e7566e9aa17821c995705aa4",
+          "version": "4.0.4"
         }
       },
       {
@@ -114,7 +114,7 @@
         "repositoryURL": "https://github.com/proggeramlug/SimpleJWTMiddleware.git",
         "state": {
           "branch": "master",
-          "revision": "e125613d4ad091175afcdfc607247f9476ba80a4",
+          "revision": "5a0387ab2ad6c5f8fe3098760cf484a5c65ef7dc",
           "version": null
         }
       },
@@ -123,8 +123,8 @@
         "repositoryURL": "https://github.com/vapor/sql-kit.git",
         "state": {
           "branch": null,
-          "revision": "64c2af0321cd6445982d6873d100cc62e16afcf7",
-          "version": "3.0.0-rc.1.2"
+          "revision": "1e0239616134dd45fa4894bfe83750d196e3a83d",
+          "version": "3.0.0"
         }
       },
       {
@@ -132,8 +132,8 @@
         "repositoryURL": "https://github.com/swift-server/swift-backtrace.git",
         "state": {
           "branch": null,
-          "revision": "eaf2cef011c0c23d1701aa60b364def8015dc3c7",
-          "version": "1.1.1"
+          "revision": "f2fd8c4845a123419c348e0bc4b3839c414077d5",
+          "version": "1.2.0"
         }
       },
       {
@@ -141,8 +141,8 @@
         "repositoryURL": "https://github.com/apple/swift-crypto.git",
         "state": {
           "branch": null,
-          "revision": "9be4a93a76d4b80105044747b35d456de7289c87",
-          "version": "1.0.0"
+          "revision": "d67ac68d09a95443303e9d6e37b34e7ba101d5f1",
+          "version": "1.0.1"
         }
       },
       {
@@ -168,8 +168,8 @@
         "repositoryURL": "https://github.com/apple/swift-nio.git",
         "state": {
           "branch": null,
-          "revision": "16ab4d657e1ad4e77bd5f8b94af8538561643053",
-          "version": "2.14.0"
+          "revision": "e876fb37410e0036b98b5361bb18e6854739572b",
+          "version": "2.16.0"
         }
       },
       {
@@ -195,8 +195,8 @@
         "repositoryURL": "https://github.com/apple/swift-nio-ssl.git",
         "state": {
           "branch": null,
-          "revision": "af46d9b58fafbb76f9b01177568d435a1b024f99",
-          "version": "2.6.2"
+          "revision": "ae213938e151964aa691f0e902462fbe06baeeb6",
+          "version": "2.7.1"
         }
       },
       {
@@ -204,8 +204,8 @@
         "repositoryURL": "https://github.com/vapor/vapor.git",
         "state": {
           "branch": null,
-          "revision": "089361cf633080028c2f15d58e0fd6e48c64f323",
-          "version": "4.0.1"
+          "revision": "47ad53a12ec287417f887f0503217f5926fe405c",
+          "version": "4.4.1"
         }
       },
       {

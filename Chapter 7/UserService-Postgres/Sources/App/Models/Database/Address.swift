@@ -7,7 +7,7 @@ final class Address: Model {
     
     static let schema = "addresses"
     
-    @ID(key: "id")
+    @ID(custom: "id")
     var id: Int?
     
     @Field(key: "street")

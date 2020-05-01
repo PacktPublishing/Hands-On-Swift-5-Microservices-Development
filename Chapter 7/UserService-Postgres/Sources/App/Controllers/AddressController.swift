@@ -29,7 +29,7 @@ final class AddressController: RouteCollection {
     func update(_ request: Request)throws -> EventLoopFuture<AddressResponse> {
         
         let content = try request.content.decode(AddressInput.self)
-        let id = try request.query.get(Int.self)
+        let id = Int(request.parameters.get("id") ?? "0") ?? 0
         
         return Address.query(on: request.db).filter(\.$id == id).filter(\.$userId == request.payload.id).all().flatMap { addresses in
             if addresses.count == 0 {
