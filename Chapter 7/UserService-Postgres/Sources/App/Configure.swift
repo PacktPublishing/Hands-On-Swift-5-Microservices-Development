@@ -9,12 +9,16 @@ public func configure(_ app: Application) throws {
     // uncomment to serve files from /Public folder
     // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
     
-    guard let jwksString = Environment.process.JWKS else { fatalError("No value was found at the given public key environment 'JWKS'")
+    guard let jwksString = Environment.process.JWKS else {
+        fatalError("No value was found at the given public key environment 'JWKS'")
     }
     
-    guard let psqlUrl = Environment.process.PSQL_CRED else { fatalError("No value was found at the given public key environment 'PSQL_CRED'")
-           }
-    guard let url = URL(string: psqlUrl) else { fatalError("Cannot parse: \(psqlUrl) correctly.")
+    guard let psqlUrl = Environment.process.PSQL_CRED else {
+        fatalError("No value was found at the given public key environment 'PSQL_CRED'")
+    }
+    
+    guard let url = URL(string: psqlUrl) else {
+        atalError("Cannot parse: \(psqlUrl) correctly.")
     }
     app.databases.use(try .postgres(url: url), as: .psql)
     app.middleware.use(CORSMiddleware())
