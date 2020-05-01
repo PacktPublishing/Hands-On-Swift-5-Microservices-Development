@@ -1,0 +1,501 @@
+{
+	"info": {
+		"_postman_id": "04593290-f61f-44bc-8fd8-bf68366d4324",
+		"name": "User Server Testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1b3cf967-6ec3-4f12-a2a3-804b8147f817",
+						"exec": [
+							"var token = pm.response.json()[\"accessToken\"];",
+							"var refreshToken = pm.response.json()[\"refreshToken\"];",
+							"pm.environment.set(\"TOKEN\", token);",
+							"pm.environment.set(\"REFRESH_TOKEN\", refreshToken);",
+							"pm.test(\"success value existent\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.status).to.eql('success');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"email@domain.com\",\n\t\"password\": \"test123\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/users/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"users",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1b3cf967-6ec3-4f12-a2a3-804b8147f817",
+						"exec": [
+							"var token = pm.response.json()[\"accessToken\"];",
+							"pm.environment.set(\"TOKEN\", token);",
+							"pm.test(\"success value existent\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.status).to.eql('success');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"email@domain.com\",\n\t\"password\": \"test123\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/users/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"users",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Profile",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1b3cf967-6ec3-4f12-a2a3-804b8147f817",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"firstname\": \"Test\",\n\t\"lastname\": \"Test\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/users/profile",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"users",
+						"profile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Address",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d1988c9c-3f5f-43ef-bdb7-71c816f2a41f",
+						"exec": [
+							"pm.test(\"success value existent\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.street).to.eql('Test');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"street\": \"Test\",\n\t\"city\": \"Test\",\n\t\"zip\": \"1111\",\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/users/addresses",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"users",
+						"addresses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Address",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0fac78b6-0ff9-48e6-a502-3a3dac565721",
+						"exec": [
+							"pm.test(\"success value existent\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.street).to.eql('Test2');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"street\": \"Test2\",\n\t\"city\": \"Test2\",\n\t\"zip\": \"1111\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/users/addresses/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"users",
+						"addresses",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Address",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8d268531-9d68-486b-9200-d56058afe449",
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/users/addresses/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"users",
+						"addresses",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Access Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f741cafe-f145-41ed-90d4-7559b42df6dc",
+						"exec": [
+							"pm.test(\"success value existent\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.status).to.eql('success');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"refreshToken\": \"{{REFRESH_TOKEN}}\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/users/accessToken",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"users",
+						"accessToken"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Password",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "536db9a3-ebcc-45ee-b856-1df46ee0437d",
+						"exec": [
+							"pm.test(\"success value existent\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.status).to.eql('success');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"email@domain.com\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/users/newPassword",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"users",
+						"newPassword"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check Status",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9d7453cd-6b03-4ac1-a554-00708f44e712",
+						"exec": [
+							"pm.test(\"success call\", function () {",
+							"    pm.expect(pm.response.json().status).to.eql('success');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/users/status",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"users",
+						"status"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7e321abb-318b-467e-9e25-24efbd18a588",
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/users/user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"users",
+						"user"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{TOKEN}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "0ea3d758-f998-4f0e-96e6-e3dcd1cfd037",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "beb9aa1e-1b7e-4601-8e14-3c35f924759d",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "c67b9001-7348-4b31-84bb-c786ed166861",
+			"key": "TOKEN",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
+}

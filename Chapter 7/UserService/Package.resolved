@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/vapor/fluent.git",
         "state": {
           "branch": null,
-          "revision": "4401a7ecceabc23052ed4255c2b1d68dc20e71fb",
-          "version": "4.0.0-rc.2"
+          "revision": "dba22d5a6115092482669efe5492d800ace4da38",
+          "version": "4.0.0-rc.2.2"
         }
       },
       {
@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/vapor/fluent-kit.git",
         "state": {
           "branch": null,
-          "revision": "4f3ec755ea8a011eeb056c34ac18c9ec826b402b",
-          "version": "1.0.0-rc.1.19"
+          "revision": "36d8ba6d026ac3363f5cd4d158fe7d082741bdab",
+          "version": "1.0.0-rc.1.25"
         }
       },
       {
@@ -51,8 +51,8 @@
         "repositoryURL": "https://github.com/vapor/fluent-mysql-driver.git",
         "state": {
           "branch": null,
-          "revision": "2505b20d5ddaaff201838809803ff61956463824",
-          "version": "4.0.0-rc.1.1"
+          "revision": "d65918e04736843172ea713b78a5145fa4ea6ca1",
+          "version": "4.0.0-rc.1.2"
         }
       },
       {
@@ -69,8 +69,8 @@
         "repositoryURL": "https://github.com/vapor/jwt-kit.git",
         "state": {
           "branch": null,
-          "revision": "c4111580bbf37aefd5182a93ecb2906a216199b3",
-          "version": "4.0.0-rc.1.3"
+          "revision": "b5aa3d4eb91b54d0bd31a1a0c238199f2bf65969",
+          "version": "4.0.0-rc.1.4"
         }
       },
       {
@@ -78,8 +78,8 @@
         "repositoryURL": "https://github.com/vapor/mysql-kit.git",
         "state": {
           "branch": null,
-          "revision": "35c9ea317fbc1109fd3c9719b4d3690795ea7c19",
-          "version": "4.0.0-rc.1.3"
+          "revision": "932d772559565d4ffa604a7fd3a3cb342a08b604",
+          "version": "4.0.0-rc.1.5"
         }
       },
       {
@@ -87,8 +87,8 @@
         "repositoryURL": "https://github.com/vapor/mysql-nio.git",
         "state": {
           "branch": null,
-          "revision": "819479d53d34c6d53a5bdaa04798d39a459bb7fa",
-          "version": "1.0.0-rc.1.1"
+          "revision": "594a25de2de8365c086e12ef96a4b153a9c55af5",
+          "version": "1.0.0-rc.1.4"
         }
       },
       {
@@ -96,8 +96,8 @@
         "repositoryURL": "https://github.com/vapor/routing-kit.git",
         "state": {
           "branch": null,
-          "revision": "35da702471cbcc308f58d38aa8fea971fa3fb166",
-          "version": "4.0.0"
+          "revision": "e7f2d5bd36dc65a9edb303541cb678515a7fece3",
+          "version": "4.1.0"
         }
       },
       {
@@ -123,8 +123,8 @@
         "repositoryURL": "https://github.com/vapor/sql-kit.git",
         "state": {
           "branch": null,
-          "revision": "64c2af0321cd6445982d6873d100cc62e16afcf7",
-          "version": "3.0.0-rc.1.2"
+          "revision": "1e0239616134dd45fa4894bfe83750d196e3a83d",
+          "version": "3.0.0"
         }
       },
       {
@@ -204,8 +204,8 @@
         "repositoryURL": "https://github.com/vapor/vapor.git",
         "state": {
           "branch": null,
-          "revision": "089361cf633080028c2f15d58e0fd6e48c64f323",
-          "version": "4.0.1"
+          "revision": "47ad53a12ec287417f887f0503217f5926fe405c",
+          "version": "4.4.1"
         }
       },
       {

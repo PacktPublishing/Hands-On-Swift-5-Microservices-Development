@@ -48,9 +48,14 @@ final class UserController: RouteCollection {
     func delete(_ request: Request)throws -> EventLoopFuture<HTTPStatus> {
         
         return User.query(on: request.db).filter(\.$id == request.payload.id).first().flatMap { user in
-            let user = user!
-            return Address.query(on: request.db).filter(\.$userId == user.id!).delete().flatMap {
-                return user.delete(on: request.db).transform(to: .ok)
+            // Because the JWT is not immediately invalid the user could send the same request twice, resulting in an error here if we assume the user exists.
+            if let user = user {
+                return Address.query(on: request.db).filter(\.$userId == user.id!).delete().flatMap {
+                    return user.delete(on: request.db).transform(to: .ok)
+                }
+            }
+            else {
+                return request.eventLoop.makeSucceededFuture(.conflict)
             }
         }
     }

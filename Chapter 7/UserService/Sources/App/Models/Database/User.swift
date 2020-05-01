@@ -8,7 +8,7 @@ final class User: Model {
     init() {
     }
     
-    @ID(key: "id")
+    @ID(custom: "id")
     var id: Int?
     
     @Field(key: "firstname")
