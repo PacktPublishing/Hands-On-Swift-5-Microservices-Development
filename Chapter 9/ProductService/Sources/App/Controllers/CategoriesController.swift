@@ -18,7 +18,7 @@ final class CategoriesController {
     }
     
     func edit(_ request: Request)throws -> EventLoopFuture<CategoryResponse> {
-        if let id = request.parameters.get("id", as: Int.self)
+        if let id = Int(request.parameters.get("id") ?? "0")
         {
             let input = try request.content.decode(CategoryInput.self)
             
@@ -41,10 +41,13 @@ final class CategoriesController {
     }
     
     func delete(_ request: Request)throws -> EventLoopFuture<HTTPStatus> {
-        let id = try request.query.get(Int.self)
-        
-        return Category.query(on: request.db).filter(\.$id == id).delete().map { _ in
-            return .ok
+        if let id = Int(request.parameters.get("id") ?? "0") {
+            return Category.query(on: request.db).filter(\.$id == id).delete().map { _ in
+                return .ok
+            }
+        }
+        else {
+            throw Abort(.badRequest, reason: "No id given.")
         }
     }
 }

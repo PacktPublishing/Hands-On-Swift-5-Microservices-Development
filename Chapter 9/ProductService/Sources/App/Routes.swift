@@ -15,8 +15,8 @@ func routes(_ app: Application) throws {
     
     root.get("categories", use: categoriesController.get)
     authorized.post("categories", use: categoriesController.new)
-    authorized.patch("categories/:id", use: categoriesController.edit)
-    authorized.delete("categories/:id", use: categoriesController.delete)
+    authorized.patch("categories", ":id", use: categoriesController.edit)
+    authorized.delete("categories", ":id", use: categoriesController.delete)
     
     root.get("", use: productsController.get)
     authorized.post("", use: productsController.new)

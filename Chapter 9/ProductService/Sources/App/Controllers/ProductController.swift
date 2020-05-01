@@ -7,19 +7,30 @@ final class ProductsController {
     func get(_ request: Request)throws -> EventLoopFuture<[ProductResponse]> {
         let querybuilder = Product.query(on: request.db)
         
-        if let categoryId = try request.query.get(Int?.self, at: "categoryId") {
-            querybuilder.filter(\.$categoryId == categoryId)
-        }
-        if let query = try request.query.get(String?.self, at: "query") {
-            querybuilder.filter(\.$name ~~ query)
-            querybuilder.group(.or) {
-                $0.filter(\Product.$name ~~ query).filter(\Product.$description ~~ query)
+        do {
+            if let categoryId = try request.query.get(Int?.self, at: "categoryId") {
+                querybuilder.filter(\.$categoryId == categoryId)
             }
         }
-        if let idsString = try request.query.get(String?.self, at: "ids") {
-            let ids:[Int] = idsString.split(separator: ",").map { Int(String($0)) ?? 0 }
-            querybuilder.filter(\.$id ~~ ids)
+        catch {}
+        
+        do {
+            if let query = try request.query.get(String?.self, at: "query") {
+                querybuilder.filter(\.$name ~~ query)
+                querybuilder.group(.or) {
+                    $0.filter(\Product.$name ~~ query).filter(\Product.$description ~~ query)
+                }
+            }
         }
+        catch {}
+        
+        do {
+            if let idsString = try request.query.get(String?.self, at: "ids") {
+                let ids:[Int] = idsString.split(separator: ",").map { Int(String($0)) ?? 0 }
+                querybuilder.filter(\.$id ~~ ids)
+            }
+        }
+        catch {}
         
         return querybuilder.all().map { products in
             return products.map { ProductResponse(id: $0.id!, name: $0.name, description: $0.description, price: $0.price) }

@@ -5,7 +5,7 @@ final class Product: Model {
     
     static let schema = "products"
     
-    @ID(key: "id")
+    @ID(custom: "id")
     var id: Int?
     
     @Field(key: "name")

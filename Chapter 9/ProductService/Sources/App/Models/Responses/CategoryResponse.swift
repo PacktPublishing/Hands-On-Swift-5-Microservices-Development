@@ -1,8 +1,7 @@
-//
-//  File.swift
-//  
-//
-//  Created by Ralph Küpper on 5/1/20.
-//
+import Vapor
 
-import Foundation
+struct CategoryResponse: Content {
+    let id: Int
+    let name: String
+}
+
