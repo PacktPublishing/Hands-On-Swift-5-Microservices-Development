@@ -4,7 +4,7 @@ Hands-On Microservices with Swift 5, published by Packt!
 # IMPORTANT NOTICE #
 This code here is continually updated until Vapor 4 is fully released. When Vapor 4 is fulled released the book will be updated as well, you will receive an updated version if you have ordered the eBook version.
 
-# Using compoer-compose #
+# Using docker-compose #
 Make sure you have the `docker-compose.yml` updated to reflect your environment variables. 
 For you to run any service using the `docker-compose.yml` you need to run the following commands:
 ```
