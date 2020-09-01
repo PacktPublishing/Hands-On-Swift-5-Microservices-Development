@@ -7,10 +7,8 @@ import SimpleJWTMiddleware
 
 final class AuthController: RouteCollection {
     var bodyCache:[String:String] = [:]
-    let sendgridClient: SendGridClient
     
-    init(_ sgc: SendGridClient) {
-        self.sendgridClient = sgc
+    init() {
     }
     
     func boot(routes: RoutesBuilder) throws {
@@ -45,7 +43,12 @@ final class AuthController: RouteCollection {
                 "value": body
                 ]])
             
-            return self.sendgridClient.send([email], on: request.eventLoop).transform(to: userResponse)
+            do {
+                return try request.application.sendgrid.client.send(email: email, on: request.eventLoop).transform(to: userResponse)
+            }
+            catch {
+                return request.eventLoop.makeFailedFuture(error)
+            }
         }
     }
     
@@ -82,7 +85,12 @@ final class AuthController: RouteCollection {
                 
                 let email = SendGridEmail(personalizations: [header], from: from, subject: "New Password", content: c)
                 
-                return self.sendgridClient.send([email], on: request.eventLoop).transform(to: user)
+            do {
+                return try request.application.sendgrid.client.send(email: email, on: request.eventLoop).transform(to: user)
+            }
+            catch {
+                return request.eventLoop.makeFailedFuture(error)
+            }
             
             
         }.flatMap { user in

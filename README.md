@@ -20,6 +20,10 @@ This follows the standard Vapor docker-compose.yml and will get your app up and 
 *Using MySQL without docker-compose:* Make sure you are passing this argument when starting: `--default-authentication-plugin=mysql_native_password` (this will be updated in the book as well).
 
 # Change Log #
+## 09/01/20: Vapor 4 Update
+All projects have been updated to the final Vapor 4 versions.
+
+
 ## 05/01/20: Chapter 9 Update##
 Various smaller issues have been corrected, among those:
 - Updates for the newer Vapor versions

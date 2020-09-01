@@ -9,10 +9,10 @@ let package = Package(
     dependencies: [
         // 💧 A server-side Swift web framework.
         .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0"),
-        .package(url: "https://github.com/vapor/fluent.git", from: "4.0.0-rc"),
-        .package(url: "https://github.com/vapor/fluent-postgres-driver.git", from: "2.0.0-rc"),
-        .package(url: "https://github.com/proggeramlug/SimpleJWTMiddleware.git", .branch("master")),
-        .package(url: "https://github.com/skelpo/sendgrid-provider.git", from: "4.0.0")
+        .package(url: "https://github.com/vapor/fluent.git", from: "4.0.0"),
+        .package(url: "https://github.com/vapor/fluent-postgres-driver.git", from: "2.0.0"),
+        .package(url: "https://github.com/proggeramlug/SimpleJWTMiddleware.git", from: "1.1.0"),
+        .package(url: "https://github.com/vapor-community/sendgrid.git", from: "4.0.0")
     ],
     targets: [
         .target(name: "App", dependencies: [
@@ -20,7 +20,7 @@ let package = Package(
             .product(name: "FluentPostgresDriver", package: "fluent-postgres-driver"),
             .product(name: "Vapor", package: "vapor"),
             .product(name: "SimpleJWTMiddleware", package: "SimpleJWTMiddleware"),
-            .product(name: "SendGrid", package: "sendgrid-provider")
+            .product(name: "SendGrid", package: "sendgrid")
         ]),
         .target(name: "Run", dependencies: ["App"]),
         .testTarget(name: "AppTests", dependencies: [

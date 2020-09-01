@@ -37,14 +37,11 @@ public func configure(_ app: Application) throws {
     
     try app.jwt.signers.use(jwksJSON: jwksString)
     
-    guard let sendgridApiKey = Environment.get("SENDGRID_API_KEY") else {
-               fatalError("No value was found at the given public key environment SENDGRID_API_KEY")
-    }
-    let sendgridClient = SendGridClient(client: app.client, apiKey: sendgridApiKey)
+    app.sendgrid.initialize()
     
     app.migrations.add(CreateUser())
     app.migrations.add(CreateAddress())
 
     // register routes
-    try routes(app, sendgridClient)
+    try routes(app)
 }

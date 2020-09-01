@@ -3,7 +3,7 @@ import Vapor
 import SendGrid
 import SimpleJWTMiddleware
 
-func routes(_ app: Application, _ sendgridClient: SendGridClient) throws {
+func routes(_ app: Application) throws {
     let root = app.grouped(.anything, "users")
     let auth = root.grouped(SimpleJWTMiddleware())
 
@@ -12,6 +12,6 @@ func routes(_ app: Application, _ sendgridClient: SendGridClient) throws {
     }
     
     try auth.grouped("addresses").register(collection: AddressController())
-    try root.register(collection: AuthController(sendgridClient))
+    try root.register(collection: AuthController())
     try auth.register(collection: UserController())
 }
