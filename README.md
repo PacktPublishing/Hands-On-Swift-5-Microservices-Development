@@ -4,8 +4,6 @@
 # Hands-On-Microservices-with-Swift-5
 Hands-On Microservices with Swift 5, published by Packt!
 
-# IMPORTANT NOTICE #
-This code here is continually updated until Vapor 4 is fully released. When Vapor 4 is fulled released the book will be updated as well, you will receive an updated version if you have ordered the eBook version.
 
 # Using docker-compose #
 Make sure you have the `docker-compose.yml` updated to reflect your environment variables. 
@@ -24,25 +22,26 @@ This follows the standard Vapor docker-compose.yml and will get your app up and 
 
 # Change Log #
 ## 09/01/20: Vapor 4 Update
-All projects have been updated to the final Vapor 4 versions.
+
+**All projects have been updated to the final Vapor 4 versions.**
 
 
-## 05/01/20: Chapter 9 Update##
+## 05/01/20: Chapter 9 Update
 Various smaller issues have been corrected, among those:
 - Updates for the newer Vapor versions
 - Adding the test suite for Postman
 - Added a Postgres Version of the service.
 
-## 05/01/20: Chapter 7 Update##
+## 05/01/20: Chapter 7 Update
 Various smaller issues have been corrected, most notably:
 - Addresses have now a sub-path "addresses"
 - Adjustments for new Vapor versions
 - Adding the test suite for Postman.
 
-## 04/13/20: Chapter 7 Update ##
+## 04/13/20: Chapter 7 Update 
 Updated the dependency to Vapor 4.0.0. Also an update to the _SimpleJWTMiddleware_ has been performed in another repository.
 
-## 04/13/20: Chapter 6 Update ##
+## 04/13/20: Chapter 6 Update 
 Updated the dependency to Vapor 4.0.0. Also an update to the _SimpleJWTMiddleware_ has been performed in another repository.
 
 _long COVID-19 related break_ 
